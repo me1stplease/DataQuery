@@ -6,7 +6,7 @@ def analyze_file(file_path, delimiter, command):
     try:
         # print("IN funct")
         # Read the file into a DataFrame using pandas
-        df = pd.read_csv(file_path, delimiter=delimiter)
+        df = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1')
 
         # Execute the user-provided command
         output = eval(command)
@@ -19,7 +19,7 @@ def analyze_file(file_path, delimiter, command):
 
 def show_data_sample(file_path, delimiter):
     try:
-        df = pd.read_csv(file_path, delimiter=delimiter)
+        df = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1')
         st.dataframe(df.head())
     except Exception as e:
         st.error(f"Error: {e}")
