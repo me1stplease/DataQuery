@@ -16,6 +16,7 @@ def analyze_file(file_path, delimiter, command):
         st.text_area("Output", value=str(output), height=400)
     except Exception as e:
         st.error(f"Error: {e}")
+        st.write(f"Please customize your input and try again.")
 
 def show_data_sample(file_path, delimiter):
     try:
