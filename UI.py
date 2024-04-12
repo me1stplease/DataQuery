@@ -51,11 +51,36 @@ def main():
                     
                     with st.expander("See explanation"):
 
-                        st.write("Early Test in one go")
+                        cnt = st.checkbox('Count Validation')
+                        if cnt:
+                            expectCount = st.text_input("Input the Expected Count") 
+
+                        dt = st.checkbox('Date Column Validation')
+                        if dt:
+                            dateCol = st.text_input("Input the list of date type column numbers separeted with commas(',')")
+                        
+                        dup = st.checkbox('Duplicate record Validation')
+
+                        mand = st.checkbox('Mandetory Field Validation')
+                        if mand:
+                            mandCol = st.text_input("Input the list of mandetory column numbers separeted with commas(',')") 
+
+                        percent = st.checkbox('Percentage Column Validation')
+                        if percent:
+                            percentCol = st.text_input("Input the list of percentage column numbers separeted with commas(',')") 
 
                         if st.button("Generate Result"):
-                            pass
 
+                            if cnt:
+                                pass
+                            if dt:
+                                pass
+                            if dup:
+                                pass
+                            if mand:
+                                pass
+                            if percent:
+                                pass
 
                     # Command input
                     user = st.text_input("User Input")
