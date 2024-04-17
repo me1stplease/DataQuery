@@ -1,0 +1,7 @@
+
+
+---DUPLICATE RECORD---
+
+     OrderDate   Region       Rep    Item  Units  Unit Cost   Total
+43  02-09-2021  Central   Jardine  Pencil     36       4.99  179.64
+44     5-22-21     West  Thompson  Pencil     32       1.99   63.68

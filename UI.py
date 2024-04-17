@@ -1,6 +1,11 @@
 import streamlit as st
 import pandas as pd
 from APICall import GeminiCall as GenAI
+from countMatch import countCheck
+from dateValidation import dateVal
+from duplicateRecords import dupRecord
+from mandatoryCheck import manCheck
+from percentageValidation import percentValid
 
 def analyze_file(df, command):
     try:
@@ -40,62 +45,72 @@ def main():
 
         # Show data sample button
         if delimiter:
-            
-            if st.button("Read file"):
-                try:
-                    chunk = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1', chunksize=1000)
-                    df=pd.concat(chunk)
+            try:
+                df = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1')
+                # df=pd.concat(chunk)
 
-                    if st.button("Show Data Sample"):
-                        show_data_sample(df)
+                if st.button("Show Data Sample"):
+                    show_data_sample(df)
                     
-                    with st.expander("See explanation"):
+                with st.expander("Early Tests"):
 
-                        cnt = st.checkbox('Count Validation')
-                        if cnt:
-                            expectCount = st.text_input("Input the Expected Count") 
+                    cnt = st.checkbox('Count Validation')
+                    if cnt:
+                        expectCount = st.text_input("Input the Expected Count") 
 
-                        dt = st.checkbox('Date Column Validation')
-                        if dt:
-                            dateCol = st.text_input("Input the list of date type column numbers separeted with commas(',')")
+                    dt = st.checkbox('Date Column Validation')
+                    if dt:
+                        dateCol = st.text_input("Input the list of date type column numbers separeted with commas(',')")
                         
-                        dup = st.checkbox('Duplicate record Validation')
+                    dup = st.checkbox('Duplicate record Validation')
 
-                        mand = st.checkbox('Mandetory Field Validation')
+                    mand = st.checkbox('Mandetory Field Validation')
+                    if mand:
+                        mandCol = st.text_input("Input the list of mandetory column numbers separeted with commas(',')") 
+
+                    percent = st.checkbox('Percentage Column Validation')
+                    if percent:
+                        percentCol = st.text_input("Input the list of percentage column numbers separeted with commas(',')") 
+
+                    # resFile = open('result.txt', 'w')
+                    if st.button("Generate Result"):
+                        resFile = open('result.txt', 'w')
+                        if cnt:
+                            countCheck(resFile,df,expectCount)
+                        if dt:
+                            dateVal(resFile,df,dateCol)
+                        if dup:
+                            dupRecord(resFile,df)
                         if mand:
-                            mandCol = st.text_input("Input the list of mandetory column numbers separeted with commas(',')") 
-
-                        percent = st.checkbox('Percentage Column Validation')
+                            manCheck(resFile,df,mandCol)
                         if percent:
-                            percentCol = st.text_input("Input the list of percentage column numbers separeted with commas(',')") 
+                            percentValid(resFile,df,percentCol)
 
-                        if st.button("Generate Result"):
+                        resFile.close()
 
-                            if cnt:
-                                pass
-                            if dt:
-                                pass
-                            if dup:
-                                pass
-                            if mand:
-                                pass
-                            if percent:
-                                pass
+                        resFile = open('result.txt', 'r')
+                        st.download_button('Download Result', resFile) 
+                        resFile.close()
 
-                    # Command input
-                    user = st.text_input("User Input")
+                    # resFile.close
 
-                    # Analyze button
-                    if st.button("Analyze"):
-                        command = GenAI(user)
-                        command =command.replace("`", "").strip() 
-                        # print("---")
-                        # print(command)
-                        analyze_file(df, command)
+                    # with open('result.txt','r+') as f:
+                    #     st.download_button('Download Result', f) 
 
-                except Exception as e:
-                    st.error(f"Error: {e}")
-                    # st.write(f"Error: {e}")
+                # Command input
+                user = st.text_input("User Input")
+
+                # Analyze button
+                if st.button("Analyze"):
+                    command = GenAI(user)
+                    command =command.replace("`", "").strip() 
+                    # print("---")
+                    # print(command)
+                    analyze_file(df, command)
+
+            except Exception as e:
+                st.error(f"Error: {e}")
+                # st.write(f"Error: {e}")
 
 if __name__ == "__main__":
     main()
