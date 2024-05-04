@@ -7,6 +7,7 @@ from duplicateRecords import dupRecord
 from mandatoryCheck import manCheck
 from percentageValidation import percentValid
 from regexVal import regexValid
+from referanceVal import refValid
 
 def analyze_file(df, command):
     try:
@@ -77,6 +78,10 @@ def main():
                     if regex:
                         regexList = st.text_input("Input regex for all columns separeted with double pipe('||') and use dash('-') for the column you want to skip") 
 
+                    refer = st.checkbox('Referance Value Validation')
+                    if refer:
+                        refList = st.text_input("Input referance values seperatef with comas(',') for all columns separeted with double pipe('||') and use dash('-') for the column you want to skip") 
+
                     # resFile = open('result.txt', 'w')
                     if st.button("Generate Result"):
                         resFile = open('result.txt', 'w')
@@ -92,6 +97,8 @@ def main():
                             percentValid(resFile,df,percentCol)
                         if regex:
                             regexValid(resFile,df,regexList)
+                        if refer:
+                            refValid(resFile,df,refList)
 
                         resFile.close()
 
