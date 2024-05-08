@@ -8,6 +8,7 @@ from mandatoryCheck import manCheck
 from percentageValidation import percentValid
 from regexVal import regexValid
 from referanceVal import refValid
+from rangeVal import rangeVal
 
 def analyze_file(df, command):
     try:
@@ -82,6 +83,12 @@ def main():
                     if refer:
                         refList = st.text_input("Input referance values seperatef with comas(',') for all columns separeted with double pipe('||') and use dash('-') for the column you want to skip") 
 
+                    ranVal = st.checkbox('Range Validation')
+                    if ranVal:
+                        ranCol = st.text_input("Input the column number to be validated") 
+                        ranS = st.text_input("Input the start of the range")
+                        ranE = st.text_input("Input the end of the range") 
+
                     # resFile = open('result.txt', 'w')
                     if st.button("Generate Result"):
                         resFile = open('result.txt', 'w')
@@ -99,6 +106,8 @@ def main():
                             regexValid(resFile,df,regexList)
                         if refer:
                             refValid(resFile,df,refList)
+                        if ranVal:
+                            rangeVal(resFile,df,ranCol,ranS,ranE)
 
                         resFile.close()
 
