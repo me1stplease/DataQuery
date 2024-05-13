@@ -13,7 +13,7 @@ def refValid(res,df,refArray):
         for i in range(cols):
             column_name = df.columns[i]
             temp = set(x[i].split(","))
-            refVal = temp-set(['-',' '])
+            refVal = temp-set(['-',' ',column_name])
 
             column_values = set(df[column_name].unique())
 

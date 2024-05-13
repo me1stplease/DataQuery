@@ -50,6 +50,8 @@ def main():
         if delimiter:
             try:
                 df = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1')
+                column_names = df.columns.tolist()
+                numerical_columns = df.select_dtypes(include=['number']).columns.tolist()
                 # df=pd.concat(chunk)
 
                 if st.button("Show Data Sample"):
@@ -77,15 +79,15 @@ def main():
 
                     regex = st.checkbox('RegEx Validation')
                     if regex:
-                        regexList = st.text_input("Input regex for all columns separeted with double pipe('||') and use dash('-') for the column you want to skip") 
+                        regexList = st.text_input("Input regex for the columns inplace of the their respective column name",value= '||'.join(map(str,column_names))) 
 
                     refer = st.checkbox('Referance Value Validation')
                     if refer:
-                        refList = st.text_input("Input referance values seperatef with comas(',') for all columns separeted with double pipe('||') and use dash('-') for the column you want to skip") 
+                        refList = st.text_input("Input referance values seperatef with comas(',') inplace of the their respective column name",value= '||'.join(map(str,column_names))) 
 
                     ranVal = st.checkbox('Range Validation')
                     if ranVal:
-                        ranCol = st.text_input("Input the column number to be validated") 
+                        ranCol = st.selectbox("Select the column number to be validated",numerical_columns)
                         ranS = st.text_input("Input the start of the range")
                         ranE = st.text_input("Input the end of the range") 
 
