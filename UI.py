@@ -9,6 +9,10 @@ from percentageValidation import percentValid
 from regexVal import regexValid
 from referanceVal import refValid
 from rangeVal import rangeVal
+from customQuery import customQ
+from excelGen import template
+from readExl import readIn
+
 
 def analyze_file(df, command):
     try:
@@ -54,6 +58,59 @@ def main():
                 numerical_columns = df.select_dtypes(include=['number']).columns.tolist()
                 # df=pd.concat(chunk)
 
+                template(column_names)
+                file_path = 'template.xlsx'
+
+                # # Load the Excel file
+                # df = load_excel(file_path)
+
+                with open(file_path, 'rb') as f:
+                    excel_data = f.read()
+
+                # Download button
+                st.download_button(
+                    label='Download Excel file',
+                    data=excel_data,
+                    file_name='template.xlsx',
+                    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                )
+
+                #generateTemplate
+                # try:
+                #     if template(column_names,st):
+                #         # def load_excel(file_path):
+                #         #     df = pd.read_excel(file_path, engine='openpyxl')
+                #         #     return df
+                        
+                #         # Path to the Excel file
+                #         file_path = 'template.xlsx'
+
+                #         # # Load the Excel file
+                #         # df = load_excel(file_path)
+
+                #         with open(file_path, 'rb') as f:
+                #             excel_data = f.read()
+
+                #         # Download button
+                #         st.download_button(
+                #             label='Download Excel file',
+                #             data=excel_data,
+                #             file_name='template.xlsx',
+                #             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                #         )
+
+                    # tempFile = open('template.xlsx', 'r')
+                    # st.download_button('Download Input Template', tempFile) 
+                    # tempFile.close()
+                        # st.download_button(
+                        #     label="Download Input Template",
+                        #     data=buffer,
+                        #     file_name="template.xlsx",
+                        #     mime="application/vnd.ms-excel"
+                        # )
+                # except Exception as e:
+                #     st.error(f"Error: {e}")
+
                 if st.button("Show Data Sample"):
                     show_data_sample(df)
                     
@@ -79,11 +136,23 @@ def main():
 
                     regex = st.checkbox('RegEx Validation')
                     if regex:
-                        regexList = st.text_input("Input regex for the columns inplace of the their respective column name",value= '||'.join(map(str,column_names))) 
+                        regex_in_file_path = st.file_uploader("Upload regex input file", type=["xlsx"], accept_multiple_files=False)
+                        if regex_in_file_path is not None:
+                            try:
+                                regexList = readIn(regex_in_file_path)   
+                            except Exception as e:
+                                st.error(f"Error: {e}")
+                            #regexList = st.text_input("Input regex for the columns inplace of the their respective column name",value= '||'.join(map(str,column_names))) 
 
                     refer = st.checkbox('Referance Value Validation')
                     if refer:
-                        refList = st.text_input("Input referance values seperatef with comas(',') inplace of the their respective column name",value= '||'.join(map(str,column_names))) 
+                        refer_in_file_path = st.file_uploader("Upload referance input file", type=["xlsx"], accept_multiple_files=False)
+                        if refer_in_file_path is not None:
+                            try:
+                                refList = readIn(refer_in_file_path)   
+                            except Exception as e:
+                                st.error(f"Error: {e}")
+                            #refList = st.text_input("Input referance values seperatef with comas(',') inplace of the their respective column name",value= '||'.join(map(str,column_names))) 
 
                     ranVal = st.checkbox('Range Validation')
                     if ranVal:
@@ -117,10 +186,17 @@ def main():
                         st.download_button('Download Result', resFile) 
                         resFile.close()
 
+                cusQ = st.text_input("Custom Panda's Query (consider data present in 'df')")
+
+                # Analyze button
+                if st.button("Generate Result",key='01'):
+                    customQ(st,df,cusQ)
+
                     # resFile.close
 
                     # with open('result.txt','r+') as f:
                     #     st.download_button('Download Result', f) 
+
 
                 # Command input
                 user = st.text_input("User Input")

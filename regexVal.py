@@ -14,7 +14,7 @@ def regexValid(res,df,regexArray):
             regex_pattern = x[i].strip()
             # print(regex_pattern)
 
-            if regex_pattern != '-' or regex_pattern != column_name:
+            if regex_pattern != '' and regex_pattern != ' ' and regex_pattern != column_name:
                 invalid_rows = df[~df[column_name].str.contains(regex_pattern, na=False)]
 
                 if not invalid_rows.empty:

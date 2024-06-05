@@ -1,11 +1,12 @@
 def refValid(res,df,refArray):
     res.write("\n\n---REFERANCE VALIDATION---\n\n")
     x = refArray.split("||")
-    # print(x)
+    print(x)
+
     cols = len(df.axes[1])
     
     if len(x) != cols:
-        res.write("Number of columns and referance values didn't matched.")
+        res.write("Number of columns and reference values didn't matched.")
         # print(len(x))
         # print(x)
         # print(cols)
@@ -13,7 +14,7 @@ def refValid(res,df,refArray):
         for i in range(cols):
             column_name = df.columns[i]
             temp = set(x[i].split(","))
-            refVal = temp-set(['-',' ',column_name])
+            refVal = temp-set(['-','',column_name,' '])
 
             column_values = set(df[column_name].unique())
 
