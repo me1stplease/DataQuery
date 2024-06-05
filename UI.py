@@ -15,6 +15,7 @@ from readExl import readIn
 
 
 def analyze_file(df, command):
+    res=''
     try:
         # print("IN funct")
         # Read the file into a DataFrame using pandas
@@ -22,25 +23,30 @@ def analyze_file(df, command):
         # df=pd.concat(chunk)
 
         # Execute the user-provided command
-        output = eval(command)
+        res=str(output = eval(command))
         # print("IN: "+str(output))
 
         # Display the command output
-        st.text_area("Output", value=str(output), height=400)
+        # st.text_area("Output", value=str(output), height=400)
     except Exception as e:
         st.error(f"Error: {e}")
         # st.write(f"Error: {e}")
+    return res
 
 def show_data_sample(df):
+    res=''
     try:
         # df = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1')
-        st.dataframe(df.head())
+        res=str(df.head())
     except Exception as e:
         st.error(f"Error: {e}")
         # st.write(f"Error: {e}")
+    return res
 
 def main():
-    st.title("File Analysis Tool")
+    st.title("Data Check:blue[Pro]")
+
+    resultData =''
 
     # File selection
     file_path = st.file_uploader("Upload File", type=["txt", "csv"], accept_multiple_files=False)
@@ -67,54 +73,23 @@ def main():
                 with open(file_path, 'rb') as f:
                     excel_data = f.read()
 
-                # Download button
-                st.download_button(
-                    label='Download Excel file',
-                    data=excel_data,
-                    file_name='template.xlsx',
-                    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                )
+                col1, col2 = st.columns(2)
 
-                #generateTemplate
-                # try:
-                #     if template(column_names,st):
-                #         # def load_excel(file_path):
-                #         #     df = pd.read_excel(file_path, engine='openpyxl')
-                #         #     return df
-                        
-                #         # Path to the Excel file
-                #         file_path = 'template.xlsx'
-
-                #         # # Load the Excel file
-                #         # df = load_excel(file_path)
-
-                #         with open(file_path, 'rb') as f:
-                #             excel_data = f.read()
-
-                #         # Download button
-                #         st.download_button(
-                #             label='Download Excel file',
-                #             data=excel_data,
-                #             file_name='template.xlsx',
-                #             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                #         )
-
-                    # tempFile = open('template.xlsx', 'r')
-                    # st.download_button('Download Input Template', tempFile) 
-                    # tempFile.close()
-                        # st.download_button(
-                        #     label="Download Input Template",
-                        #     data=buffer,
-                        #     file_name="template.xlsx",
-                        #     mime="application/vnd.ms-excel"
-                        # )
-                # except Exception as e:
-                #     st.error(f"Error: {e}")
-
-                if st.button("Show Data Sample"):
-                    show_data_sample(df)
+                with col1:
+                    if st.button("Show Data Sample"):
+                        resultData=show_data_sample(df)
+                with col2:
+                    # Download buttons
+                    st.download_button(
+                        label='Download Excel file',
+                        data=excel_data,
+                        file_name='template.xlsx',
+                        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    )
                     
-                with st.expander("Early Tests"):
+                with st.sidebar:
+
+                    st.subheader(':blue[Select] Validations:', divider='rainbow')
 
                     cnt = st.checkbox('Count Validation')
                     if cnt:
@@ -186,29 +161,34 @@ def main():
                         st.download_button('Download Result', resFile) 
                         resFile.close()
 
-                cusQ = st.text_input("Custom Panda's Query (consider data present in 'df')")
+                colA1, colA2 = st.columns(2)
+                with colA1:
+                    cusQ = st.text_input("Custom Panda's Query (consider data present in 'df')")
 
-                # Analyze button
-                if st.button("Generate Result",key='01'):
-                    customQ(st,df,cusQ)
+                    # Analyze button
+                    if st.button("Generate Result",key='01'):
+                        resultData=customQ(st,df,cusQ)
 
-                    # resFile.close
+                        # resFile.close
 
-                    # with open('result.txt','r+') as f:
-                    #     st.download_button('Download Result', f) 
+                        # with open('result.txt','r+') as f:
+                        #     st.download_button('Download Result', f) 
 
 
-                # Command input
-                user = st.text_input("User Input")
+                with colA2:
+                
+                    # Command input
+                    user = st.text_input("User Input")
 
-                # Analyze button
-                if st.button("Analyze"):
-                    command = GenAI(user)
-                    command =command.replace("`", "").strip() 
-                    # print("---")
-                    # print(command)
-                    analyze_file(df, command)
+                    # Analyze button
+                    if st.button("Analyze"):
+                        command = GenAI(user)
+                        command =command.replace("`", "").strip() 
+                        # print("---")
+                        # print(command)
+                        analyze_file(df, command)
 
+                ResultDisplay = st.text_area("Result:",f"{resultData}")
             except Exception as e:
                 st.error(f"Error: {e}")
                 # st.write(f"Error: {e}")
