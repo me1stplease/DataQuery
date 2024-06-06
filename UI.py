@@ -44,7 +44,7 @@ def show_data_sample(df):
     return res
 
 def main():
-    st.title("Data Check:blue[Pro]")
+    st.title("Data Check:red[Pro]")
 
     resultData =''
 
@@ -89,7 +89,7 @@ def main():
                     
                 with st.sidebar:
 
-                    st.subheader(':blue[Select] Validations:', divider='rainbow')
+                    st.subheader(':red[Select] Validations:', divider='red')
 
                     cnt = st.checkbox('Count Validation')
                     if cnt:
