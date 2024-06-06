@@ -23,7 +23,8 @@ def analyze_file(df, command):
         # df=pd.concat(chunk)
 
         # Execute the user-provided command
-        res=str(output = eval(command))
+        output = str(eval(command))
+        res=output
         # print("IN: "+str(output))
 
         # Display the command output
