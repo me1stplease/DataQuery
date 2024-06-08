@@ -4,3 +4,5 @@ langchain-google-genai
 google-generativeai
 python-dotenv
 openpyxl
+langchain_experimental
+tabulate

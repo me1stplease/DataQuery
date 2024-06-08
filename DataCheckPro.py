@@ -13,32 +13,34 @@ from customQuery import customQ
 from excelGen import template
 from readExl import readIn
 
+st.set_page_config(page_title="Data CheckPro", page_icon='icon.png' , layout="centered", initial_sidebar_state="auto", menu_items=None)
 
-def analyze_file(df, command):
-    res=''
-    try:
-        # print("IN funct")
-        # Read the file into a DataFrame using pandas
-        # chunk = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1', chunksize=1000)
-        # df=pd.concat(chunk)
 
-        # Execute the user-provided command
-        res = str(eval(command))
-        # res=output
-        # print("IN: "+str(output))
+# def analyze_file(command):
+#     res=''
+#     try:
+#         # print("IN funct")
+#         # Read the file into a DataFrame using pandas
+#         # chunk = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1', chunksize=1000)
+#         # df=pd.concat(chunk)
 
-        # Display the command output
-        # st.text_area("Output", value=str(output), height=400)
-    except Exception as e:
-        st.error(f"Error: {e}")
-        # st.write(f"Error: {e}")
-    return res
+#         # Execute the user-provided command
+#         res = str(command)
+#         # res=output
+#         # print("IN: "+str(output))
+
+#         # Display the command output
+#         # st.text_area("Output", value=str(output), height=400)
+#     except Exception as e:
+#         st.error(f"Error: {e}")
+#         # st.write(f"Error: {e}")
+#     return res
 
 def show_data_sample(df):
     res=''
     try:
         # df = pd.read_csv(file_path, delimiter=delimiter, encoding='latin-1')
-        res=str(df.head())
+        res=df.head()
     except Exception as e:
         st.error(f"Error: {e}")
         # st.write(f"Error: {e}")
@@ -48,6 +50,8 @@ def main():
     st.title("Data Check:red[Pro]")
 
     resultData =''
+    resultDataframe = pd.DataFrame({})
+    # print(len(resultDataframe))
 
     # File selection
     file_path = st.file_uploader("Upload File", type=["txt", "csv"], accept_multiple_files=False)
@@ -78,7 +82,7 @@ def main():
 
                 with col1:
                     if st.button("Show Data Sample"):
-                        resultData=show_data_sample(df)
+                        resultDataframe =show_data_sample(df)
                 with col2:
                     # Download buttons
                     st.download_button(
@@ -168,7 +172,7 @@ def main():
 
                     # Analyze button
                     if st.button("Generate Result",key='01'):
-                        resultData=customQ(st,df,cusQ)
+                        resultDataframe = customQ(st,df,cusQ)
 
                         # resFile.close
 
@@ -183,13 +187,16 @@ def main():
 
                     # Analyze button
                     if st.button("Analyze"):
-                        command = GenAI(user)
-                        command =command.replace("`", "").strip() 
                         # print("---")
+                        command = GenAI(df,user)
                         # print(command)
-                        analyze_file(df, command)
-
-                ResultDisplay = st.text_area("Result:",f"{resultData}")
+                        command =command.replace("`", "").strip() 
+                        
+                        resultData=command
+                if resultData != '':
+                    st.text_area("Result:",f"{resultData}")
+                elif len(resultDataframe)>0:
+                    st.dataframe(resultDataframe)
             except Exception as e:
                 st.error(f"Error: {e}")
                 # st.write(f"Error: {e}")

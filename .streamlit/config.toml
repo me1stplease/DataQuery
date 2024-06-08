@@ -1,5 +1,5 @@
 [theme]
-base="Light"
+base="light"
 
 backgroundColor = '#79B791'
 primaryColor = '#ABD1B5'
