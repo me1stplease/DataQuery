@@ -16,7 +16,8 @@ def GeminiCall(df,user, llmIn=llm):
                 df,
                 agent_type="zero-shot-react-description",
                 verbose=True,
-                return_intermediate_steps=True
+                return_intermediate_steps=True,
+                allow_dangerous_code=True
         )
         # prompt = "You are a pandas query generator to generator or correct the pandas query based on the the following input "+"'"+user+"'"
         # result = llmIn.invoke(prompt)
