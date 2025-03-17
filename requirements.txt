@@ -6,3 +6,4 @@ python-dotenv
 openpyxl
 langchain_experimental
 tabulate
+langchain[google-vertexai]
