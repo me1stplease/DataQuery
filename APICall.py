@@ -1,5 +1,6 @@
 from langchain_experimental.agents import create_pandas_dataframe_agent
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAI
+from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
 import pandas as pd
 import os
@@ -9,7 +10,8 @@ load_dotenv()
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-llm = ChatGoogleGenerativeAI(model="gemini-pro")
+llm = init_chat_model("gemini-2.0-flash-001", model_provider="google_vertexai")
+# llm = ChatGoogleGenerativeAI(model="gemini-pro")
 
 def GeminiCall(df, user, llmIn=llm):
     print()
